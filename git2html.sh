@@ -318,7 +318,7 @@ do
       # This is just a bit of graph.  Add it to the branch's
       # index.html and then go to the next commit.
       echo "<tr><td valign=\"middle\"><pre>$graph</pre></td><td></td><td></td><td></td></tr>" \
-	>> "$BRANCH_INDEX"
+        >> "$BRANCH_INDEX"
       continue
     fi
 
@@ -329,9 +329,9 @@ do
     metadata=$(git log -n 1 --pretty=raw $commit \
         | sed 's#<#\&lt;#g; s#>#\&gt;#g; ')
     parent=$(echo "$metadata" \
-	| gawk '/^parent / { $1=""; sub (" ", ""); print $0 }')
+        | gawk '/^parent / { $1=""; sub (" ", ""); print $0 }')
     author=$(echo "$metadata" \
-	| gawk '/^author / { NF=NF-2; $1=""; sub(" ", ""); print $0 }')
+        | gawk '/^author / { NF=NF-2; $1=""; sub(" ", ""); print $0 }')
     date=$(echo "$metadata" | gawk '/^author / { print $(NF=NF-1); }')
     date=$(date -u -d "1970-01-01 $date sec")
     log=$(echo "$metadata" | gawk '/^    / { if (!done) print $0; done=1; }')
@@ -348,7 +348,7 @@ do
       #   $ mkdir foo
       #   $ ln -s foo bar
       #   $ ln -s baz bar
-      #   $ ls -ld bar bar/baz 
+      #   $ ls -ld bar bar/baz
       #   lrwxrwxrwx 1 neal neal 3 Aug  3 09:14 bar -> foo
       #   lrwxrwxrwx 1 neal neal 3 Aug  3 09:14 bar/baz -> baz
       rm -f "$TARGET/branches/$branch"
@@ -360,14 +360,14 @@ do
 
       {
         html_header "Branch: $branch" ".."
-	echo "<p><a href=\"$branch/index.html\">HEAD</a>"
+        echo "<p><a href=\"$branch/index.html\">HEAD</a>"
         echo "<p><table>"
       } > "$BRANCH_INDEX"
     fi
 
     # Add this commit to the branch's index.html.
     echo "<tr><td valign=\"middle\"><pre>$graph</pre></td><td><a href=\"../commits/$commit/index.html\">$log</a></td><td>$author</td><td><i>$date</i></td></tr>" \
-	>> "$BRANCH_INDEX"
+        >> "$BRANCH_INDEX"
 
 
     # Commits don't change.  If the directory already exists, it is up
@@ -393,20 +393,20 @@ do
 
       # The metadata.
       echo "<h2>Branch: <a href=\"../../branches/$branch.html\">$branch</a></h2>" \
-	"<p>Author: $author" \
-	"<br>Date: $date" \
+        "<p>Author: $author" \
+        "<br>Date: $date" \
         "<br>Commit: $commit"
       for p in $parent
       do
         echo "<br>Parent: <a href=\"../../commits/$p/index.html\">$p</a>" \
-	" (<a href=\"../../commits/$commit/diff-to-$p.html\">diff to parent</a>)"
+        " (<a href=\"../../commits/$commit/diff-to-$p.html\">diff to parent</a>)"
       done
       echo "<br>Log message:" \
-	"<p><pre>$loglong</pre>"
+        "<p><pre>$loglong</pre>"
       for p in $parent
       do
-	echo "<br>Diff Stat to $p:" \
-	  "<blockquote><pre>"
+        echo "<br>Diff Stat to $p:" \
+          "<blockquote><pre>"
         git diff --stat $p..$commit \
           | gawk \
               '{ if (last_line) print last_line;
@@ -428,8 +428,8 @@ do
       sed 's/\([^ \t]\+[ \t]\)\{3\}//;
                  s#^#/#; s#/\([^/]*/\)#/1\1#; s#/\([^/]*\)$#/0\1#;' \
           < "$FILES" \
-	  | sort | sed 's#/[01]#/#g; s#^/##' \
-	  | gawk '
+          | sort | sed 's#/[01]#/#g; s#^/##' \
+          | gawk '
            function spaces(l) {
              for (space = 1; space <= l; space ++) { printf ("  "); }
            }
@@ -455,7 +455,7 @@ do
              # Remove the file.  Keep the directories.
              file=components[length(components)]
              delete components[length(components)];
-  
+
              # See if a path component changed.
              for (i = 1;
                   i <= min(length(components), length(current_components));
@@ -475,7 +475,7 @@ do
                printf ("</ul> <!-- %s -->\n", current_components[j]);
                delete current_components[j];
              }
-  
+
              # If there are new path components push them on the
              # current_component stack.
              for (; i <= length(components); i ++)
@@ -487,7 +487,7 @@ do
                  spaces(i);
                  printf("<ul>\n");
              }
-  
+
              spaces(length(current_components))
              printf ("<li><a name=\"files:%s\" href=\"%s.raw.html\">%s</a>\n",
                      $0, $0, file);
@@ -514,12 +514,12 @@ do
         html_header "diff $(echo $commit | sed 's/^\(.\{8\}\).*/\1/') $(echo $p | sed 's/^\(.\{8\}\).*/\1/')" "../.."
         echo "<h2>Branch: <a href=\"../../branches/$branch.html\">$branch</a></h2>" \
           "<h3>Commit: <a href=\"index.html\">$commit</a></h3>" \
-  	"<p>Author: $author" \
-  	"<br>Date: $date" \
-  	"<br>Parent: <a href=\"../$p/index.html\">$p</a>" \
-  	"<br>Log message:" \
-  	"<p><pre>$loglong</pre>" \
-  	"<p>" \
+        "<p>Author: $author" \
+        "<br>Date: $date" \
+        "<br>Parent: <a href=\"../$p/index.html\">$p</a>" \
+        "<br>Log message:" \
+        "<p><pre>$loglong</pre>" \
+        "<p>" \
           "<pre>"
         git diff -p $p..$commit \
           | sed 's#<#\&lt;#g; s#>#\&gt;#g;
@@ -543,17 +543,17 @@ do
       sha=$(echo "$line" | gawk '{ print $3 }')
 
       object_dir="$TARGET/objects/"$(echo "$sha" \
-	  | sed 's#^\([a-f0-9]\{2\}\).*#\1#')
+          | sed 's#^\([a-f0-9]\{2\}\).*#\1#')
       object="$object_dir/$sha"
 
       if test ! -e "$object"
       then
         # File does not yet exists in the object repository.
         # Create it.
-	if test ! -d "$object_dir"
-	then
-	  mkdir "$object_dir"
-	fi
+        if test ! -d "$object_dir"
+        then
+          mkdir "$object_dir"
+        fi
 
         # The object's file should not be commit or branch specific:
         # the same html is shared among all files with the same
@@ -577,10 +577,10 @@ do
       raw_filename="raw/$(echo "$sha" | sed 's/^\(..\)/\1\//')"
       if ! test -e "$raw_filename"
       then
-	  mkdir -p "$(dirname "$raw_filename")"
-	  git cat-file blob "$sha" > $raw_filename
+          mkdir -p "$(dirname "$raw_filename")"
+          git cat-file blob "$sha" > $raw_filename
       fi
-      ln "$raw_filename" "$file"
+      ln -f "$raw_filename" "$file"
     done <"$FILES"
     rm -f "$FILES"
   done <$COMMITS
@@ -596,4 +596,3 @@ done
   echo "</ul>"
   html_footer
 } >> "$INDEX"
-
