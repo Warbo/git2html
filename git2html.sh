@@ -209,7 +209,7 @@ else
   cd "$TARGET/repository"
 fi
 
-# git mrge fails if there are not set.  Fake them.
+# git merge fails if these are not set.  Fake them.
 git config user.email "git2html@git2html"
 git config user.name "git2html"
 
@@ -295,7 +295,7 @@ do
   cd "$TARGET/repository"
 
   COMMITS=$(mktemp)
-  git rev-list --graph "origin/$branch" > $COMMITS
+  git rev-list --graph "origin/$branch" | head > $COMMITS
 
   # Count the number of commits on this branch to improve reporting.
   ccount=$(egrep '[0-9a-f]' < $COMMITS | wc -l)
