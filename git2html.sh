@@ -31,7 +31,7 @@ usage()
   echo "  -b  List of branches to process (default: all)."
   echo "  -q  Be quiet."
   echo "  -f  Force rebuilding of all pages."
-  exit $1
+  exit "$1"
 }
 
 show_progress=1
@@ -73,7 +73,7 @@ do
       ;;
   esac
 done
-shift $(($OPTIND - 1))
+shift $((OPTIND - 1))
 
 if test $# -ne 1
 then
@@ -95,6 +95,7 @@ mkdir -p "$TARGET"
 CONFIG_FILE=".ht_git2html"
 
 # Read the configuration file.
+# shellcheck source=/dev/null
 if test -e "$TARGET/$CONFIG_FILE"
 then
   . "$TARGET/$CONFIG_FILE"
@@ -295,10 +296,10 @@ do
   cd "$TARGET/repository"
 
   COMMITS=$(mktemp)
-  git rev-list -n 10 --graph "origin/$branch" > $COMMITS
+  git rev-list -n 10 --graph "origin/$branch" > "$COMMITS"
 
   # Count the number of commits on this branch to improve reporting.
-  ccount=$(egrep '[0-9a-f]' < $COMMITS | wc -l)
+  ccount=$(egrep '[0-9a-f]' < "$COMMITS" | wc -l)
 
   progress "Branch $branch ($b/$bcount): processing ($ccount commits)."
 
@@ -326,7 +327,7 @@ do
     progress "Commit $commit ($c/$ccount): processing."
 
     # Extract metadata about this commit.
-    metadata=$(git log -n 1 --pretty=raw $commit \
+    metadata=$(git log -n 1 --pretty=raw "$commit" \
         | sed 's#<#\&lt;#g; s#>#\&gt;#g; ')
     parent=$(echo "$metadata" \
         | gawk '/^parent / { $1=""; sub (" ", ""); print $0 }')
@@ -406,8 +407,10 @@ do
       for p in $parent
       do
         echo "<br>Diff Stat to $p:" \
-          "<blockquote><pre>"
-        git diff --stat $p..$commit \
+             "<blockquote><pre>"
+
+        #shellcheck disable=SC1004
+        git diff --stat "$p".."$commit" \
           | gawk \
               '{ if (last_line) print last_line;
                  last_line_raw=$0;
@@ -511,7 +514,8 @@ do
     for p in $parent
     do
       {
-        html_header "diff $(echo $commit | sed 's/^\(.\{8\}\).*/\1/') $(echo $p | sed 's/^\(.\{8\}\).*/\1/')" "../.."
+        # shellcheck disable=SC1004
+        html_header "diff $(echo "$commit" | sed 's/^\(.\{8\}\).*/\1/') $(echo "$p" | sed 's/^\(.\{8\}\).*/\1/')" "../.."
         echo "<h2>Branch: <a href=\"../../branches/$branch.html\">$branch</a></h2>" \
           "<h3>Commit: <a href=\"index.html\">$commit</a></h3>" \
         "<p>Author: $author" \
@@ -521,7 +525,7 @@ do
         "<p><pre>$loglong</pre>" \
         "<p>" \
           "<pre>"
-        git diff -p $p..$commit \
+        git diff -p "$p".."$commit" \
           | sed 's#<#\&lt;#g; s#>#\&gt;#g;
                  s#^\(diff --git a/\)\([^ ]\+\)#\1<a name="\2">\2</a>#;
                  s#^\(\(---\|+++\|index\|diff\|deleted\|new\) .\+\)$#<b>\1</b>#;
@@ -570,7 +574,7 @@ do
       fi
 
       # Create a hard link to the formatted file in the object repository.
-      mkdir -p $(dirname "$file")
+      mkdir -p "$(dirname "$file")"
       ln "$object" "$file.raw.html"
 
       # Create a hard link to the raw file.
@@ -578,13 +582,13 @@ do
       if ! test -e "$raw_filename"
       then
           mkdir -p "$(dirname "$raw_filename")"
-          git cat-file blob "$sha" > $raw_filename
+          git cat-file blob "$sha" > "$raw_filename"
       fi
       ln -f "$raw_filename" "$file"
     done <"$FILES"
     rm -f "$FILES"
-  done <$COMMITS
-  rm -f $COMMITS
+  done < "$COMMITS"
+  rm -f "$COMMITS"
 
   {
     echo "</table>"
