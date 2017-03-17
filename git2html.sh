@@ -296,7 +296,7 @@ do
   cd "$TARGET/repository"
 
   COMMITS=$(mktemp)
-  git rev-list -n 10 --graph "origin/$branch" > "$COMMITS"
+  git rev-list -n 1 --graph "origin/$branch" > "$COMMITS"
 
   # Count the number of commits on this branch to improve reporting.
   ccount=$(egrep '[0-9a-f]' < "$COMMITS" | wc -l)
