@@ -542,6 +542,13 @@ do
     # For each file in the commit, ensure the object exists.
     while read -r line
     do
+      # Some changes bump the commit of a submodule; ignore these
+      sort=$(echo "$line" | gawk '{ print $2 }')
+      if x"$sort" = xcommit
+      then
+        continue
+      fi
+
       file_base=$(echo "$line" | gawk '{ print $4 }')
       file="$TARGET/commits/$commit/$file_base"
       sha=$(echo "$line" | gawk '{ print $3 }')
