@@ -544,7 +544,7 @@ do
     do
       # Some changes bump the commit of a submodule; ignore these
       sort=$(echo "$line" | gawk '{ print $2 }')
-      if x"$sort" = xcommit
+      if test x"$sort" = xcommit
       then
         continue
       fi
