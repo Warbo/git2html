@@ -265,8 +265,9 @@ INDEX="$TARGET/index.html"
 
   while read -r F
   do
-    echo "<h2>Readme</h2>"
+    echo -e "<h2>Readme</h2>\n<pre><code>"
     cat "$F"
+    echo -e "</code></pre>"
     break
   done < <(find "$TARGET/repository" -maxdepth 1 -name 'README*' -type f)
 
