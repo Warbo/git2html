@@ -187,7 +187,8 @@ unset GIT_DIR
 if test ! -e "$TARGET/repository"
 then
   # Clone the repository.
-  git clone --recursive "$REPOSITORY" "$TARGET/repository"
+  git clone --depth 1 --shallow-submodules --recursive "$REPOSITORY" \
+            "$TARGET/repository"
   cd "$TARGET/repository"
 
   # We don't need any local branches.  In fact, they only make trouble
