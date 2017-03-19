@@ -582,7 +582,7 @@ do
 
       # Create a hard link to the formatted file in the object repository.
       mkdir -p "$(dirname "$file")"
-      ln "$object" "$file.raw.html"
+      ln -f "$object" "$file.raw.html"
 
       # Create a hard link to the raw file.
       raw_filename="raw/$(echo "$sha" | sed 's/^\(..\)/\1\//')"
