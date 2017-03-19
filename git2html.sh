@@ -131,12 +131,6 @@ TEMPLATE="$CURRENT_TEMPLATE"
   save "TEMPLATE" "$TEMPLATE"
 } > "$TARGET/$CONFIG_FILE"
 
-if test ! -d "$REPOSITORY"
-then
-  echo "Repository \"$REPOSITORY\" does not exists.  Misconfiguration likely."
-  exit 1
-fi
-
 html_header()
 {
   title="$1"
@@ -269,11 +263,12 @@ INDEX="$TARGET/index.html"
 {
   html_header
 
-  if test -e "$REPOSITORY/description"
-  then
-    echo "<h2>Description</h2>"
-    cat "$REPOSITORY/description"
-  fi
+  while read -r F
+  do
+    echo "<h2>Readme</h2>"
+    cat "$F"
+    break
+  done < <(find "$TARGET/repository" -maxdepth 1 -name 'README*' -type f)
 
   echo "<h2>Repository</h2>"
   if test x"$PUBLIC_REPOSITORY" != x
