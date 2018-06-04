@@ -295,7 +295,7 @@ do
   git rev-list -n 1 --graph "origin/$branch" > "$COMMITS"
 
   # Count the number of commits on this branch to improve reporting.
-  ccount=$(egrep '[0-9a-f]' < "$COMMITS" | wc -l)
+  ccount=$(grep -c '[0-9a-f]' < "$COMMITS")
 
   progress "Branch $branch ($b/$bcount): processing ($ccount commits)."
 
