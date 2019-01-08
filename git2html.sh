@@ -255,7 +255,7 @@ git checkout "origin/$first"
 bcount=0
 for branch in $BRANCHES
 do
-  let ++bcount
+  (( ++bcount ))
 done
 
 INDEX="$TARGET/index.html"
@@ -265,7 +265,7 @@ INDEX="$TARGET/index.html"
 
   while read -r F
   do
-    echo -e "<h2>Readme</h2>\n<pre><code>"
+    echo -e "<h2>Readme</h2>\\n<pre><code>"
     cat "$F"
     echo -e "</code></pre>"
     break
@@ -287,7 +287,7 @@ INDEX="$TARGET/index.html"
 b=0
 for branch in $BRANCHES
 do
-  let ++b
+  (( ++b ))
 
   cd "$TARGET/repository"
 
@@ -319,7 +319,7 @@ do
       continue
     fi
 
-    let ++c
+    (( ++c ))
     progress "Commit $commit ($c/$ccount): processing."
 
     # Extract metadata about this commit.
